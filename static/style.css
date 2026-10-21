@@ -16,7 +16,7 @@ body { font-family: sans-serif; background: #f4f5f7; margin: 0; color: #333; }
 .profile-text p { font-size: 11px; margin: 0; opacity: 0.9; }
 .address { color: #ffcccc; margin-top: 3px !important; }
 
-/* Наше кастомное меню */
+/* Меню навигации */
 .custom-menu { display: flex; background: #fff; border-bottom: 1px solid #eee; }
 .menu-item { flex: 1; background: none; border: none; padding: 12px 5px; font-size: 12px; font-weight: 600; cursor: pointer; color: #666; text-align: center; }
 .menu-item.active { color: #00bfa5; border-bottom: 2px solid #00bfa5; }
