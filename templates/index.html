@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн-запись к мастеру красоты</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Мастер красоты</h1>
+            <p>Профессиональный уход и безупречный результат</p>
+        </div>
+    </header>
+
+    <main class="container">
+        {% if success == '1' %}
+            <div class="alert success">
+                Запись успешно оформлена! Ждем вас в назначенное время.
+            </div>
+        {% endif %}
+
+        <!-- Форма онлайн-записи -->
+        <section class="section">
+            <h2>Онлайн-запись</h2>
+            <form action="/book" method="POST" class="form">
+                <div class="form-group">
+                    <label for="name">Ваше имя:</label>
+                    <input type="text" id="name" name="name" required placeholder="Анна">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Телефон:</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="+7 (999) 000-00-00">
+                </div>
+                <div class="form-group">
+                    <label for="service">Услуга:</label>
+                    <select id="service" name="service" required>
+                        <option value="">Выберите услугу</option>
+                        <option value="Маникюр">Маникюр</option>
+                        <option value="Педикюр">Педикюр</option>
+                        <option value="Макияж">Макияж</option>
+                        <option value="Оформление бровей">Оформление бровей</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Дата и время:</label>
+                    <input type="datetime-local" id="date" name="date" required>
+                </div>
+                <button type="submit" class="btn">Записаться</button>
+            </form>
+        </section>
+
+        <!-- Секция отзывов -->
+        <section class="section">
+            <h2>Отзывы клиентов</h2>
+            
+            <div class="reviews-list">
+                {% if reviews %}
+                    {% for review in reviews %}
+                        <div class="review-card">
+                            <div class="review-header">
+                                <strong>{{ review.author }}</strong>
+                                <span class="review-date">{{ review.date }}</span>
+                            </div>
+                            <p class="review-text">{{ review.text }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-reviews">Пока нет отзывов. Станьте первым!</p>
+                {% endif %}
+            </div>
+
+            <h3>Оставить отзыв</h3>
+            <form action="/add_review" method="POST" class="form">
+                <div class="form-group">
+                    <label for="author">Ваше имя:</label>
+                    <input type="text" id="author" name="author" required placeholder="Елена">
+                </div>
+                <div class="form-group">
+                    <label for="text">Текст отзыва:</label>
+                    <textarea id="text" name="text" rows="4" required placeholder="Все очень понравилось!"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="review_date">Дата визита:</label>
+                    <input type="date" id="review_date" name="date" required>
+                </div>
+                <button type="submit" class="btn">Отправить отзыв</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Мастер красоты. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>
