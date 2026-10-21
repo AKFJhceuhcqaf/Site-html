@@ -4,9 +4,10 @@ from supabase import create_client, Client
 import html
 
 app = Flask(__name__)
+# Защищенный секретный ключ сессии администратора
 app.secret_key = os.environ.get("SECRET_KEY", "super-secret-key-change-it")
 
-# Подключение к Supabase с защитой от падения, если ключи не указаны
+# Подключение к Supabase через переменные окружения
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
@@ -27,7 +28,6 @@ def index():
         "bio_en": "Permanent makeup, Brow master, Eyelash extensions"
     }
     
-    # Безопасное получение данных из базы, если подключение настроено
     if supabase:
         try:
             response = supabase.table("settings").select("*").execute()
@@ -42,7 +42,7 @@ def index():
 def admin():
     if request.method == 'POST':
         password = request.form.get('password')
-        if password == "admin123":
+        if password == "admin123": # Измените пароль при необходимости
             session['logged_in'] = True
             return redirect(url_for('admin'))
         else:
@@ -67,7 +67,7 @@ def update_settings():
     if not session.get('logged_in'):
         return redirect(url_for('admin'))
         
-    # Защита от XSS (экранирование)
+    # Защита от XSS (экранирование пользовательского ввода)
     new_name = html.escape(request.form.get('name', ''))
     new_phone = html.escape(request.form.get('phone', ''))
     new_avatar = html.escape(request.form.get('avatar_url', ''))
@@ -87,6 +87,7 @@ def update_settings():
 
 @app.route('/book', methods=['POST'])
 def book():
+    # Экранирование данных онлайн-записи
     client_name = html.escape(request.form.get('client_name', ''))
     client_phone = html.escape(request.form.get('client_phone', ''))
     service = html.escape(request.form.get('service', ''))
