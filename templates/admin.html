@@ -8,28 +8,28 @@
 <body class="admin-body">
     <div class="admin-container">
         {% if needs_login %}
-            <h2>Вход в админку</h2>
-            {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+            <h2 style="margin-top:0;">Вход в админку</h2>
+            {% if error %}<p style="color:red; font-size: 13px;">{{ error }}</p>{% endif %}
             <form method="POST">
-                <input type="password" name="password" placeholder="Введите пароль (admin123)" required class="input-field">
+                <input type="password" name="password" placeholder="Пароль (admin123)" required class="input-field">
                 <button type="submit" class="btn-primary">Войти</button>
             </form>
         {% else %}
-            <h2>Управление сайтом</h2>
+            <h2 style="margin-top:0;">Управление сайтом</h2>
             <form action="/update-settings" method="POST">
-                <label>Имя мастера:</label>
+                <label style="font-size:12px; font-weight:bold;">Имя мастера:</label>
                 <input type="text" name="name" value="{{ data.name }}" required class="input-field">
                 
-                <label>Номер телефона:</label>
+                <label style="font-size:12px; font-weight:bold;">Номер телефона:</label>
                 <input type="text" name="phone" value="{{ data.phone }}" required class="input-field">
                 
-                <label>Ссылка на фото профиля (Аватарка):</label>
+                <label style="font-size:12px; font-weight:bold;">Ссылка на фото профиля (Аватарка):</label>
                 <input type="text" name="avatar_url" value="{{ data.avatar_url }}" required class="input-field">
                 
                 <button type="submit" class="btn-submit">Сохранить изменения</button>
             </form>
             <br>
-            <a href="/" style="color: #00bfa5;">← Вернуться на сайт</a>
+            <a href="/" style="color: #d4af37; text-decoration: none; font-size: 13px; font-weight: bold;">← Вернуться на сайт</a>
         {% endif %}
     </div>
 </body>
