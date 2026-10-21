@@ -1,276 +1,38 @@
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f4f5f7;
-    margin: 0;
-    padding: 0;
-    color: #333;
-}
-.container {
-    max-width: 480px;
-    margin: 0 auto;
-    background: #fff;
-    min-height: 100vh;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    padding-bottom: 40px;
-}
-.profile-header {
-    position: relative;
-    background: #000;
-}
-.profile-banner {
-    height: 180px;
-    background: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600') center/cover;
-    position: relative;
-}
-.lang-switch {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #fff;
-    padding: 4px 10px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: bold;
-}
-.profile-info {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    color: #fff;
-    margin-top: -60px;
-    position: relative;
-}
-.avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 3px solid #fff;
-    object-fit: cover;
-    margin-right: 15px;
-}
-.profile-text h1 {
-    font-size: 18px;
-    margin: 0 0 5px 0;
-}
-.profile-text p {
-    font-size: 12px;
-    margin: 0 0 3px 0;
-    opacity: 0.9;
-}
-.address {
-    color: #ffcccc;
-}
-.profile-nav {
-    display: flex;
-    justify-content: space-around;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    padding: 10px 0;
-}
-.nav-btn {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #666;
-    padding-bottom: 4px;
-}
-.nav-btn.active {
-    color: #00bfa5;
-    border-bottom: 2px solid #00bfa5;
-}
-.booking-section {
-    text-align: center;
-    padding: 25px 20px;
-}
-.booking-section p {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 15px;
-}
-.btn-primary {
-    background-color: #00bfa5;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 14px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.contacts-section {
-    padding: 0 20px;
-}
-.contacts-section p {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 10px;
-}
-.contact-card {
-    display: flex;
-    align-items: center;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-}
-.contact-card .icon {
-    margin-right: 15px;
-    font-size: 18px;
-}
-.section-block {
-    padding: 20px;
-}
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-.portfolio-grid img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-.review-card {
-    background: #fafafa;
-    border: 1px solid #eee;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 13px;
-}
-.review-date {
-    float: right;
-    color: #888;
-    font-size: 11px;
-}
-.footer {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 12px;
-    color: #888;
-}
+body { font-family: sans-serif; background: #f4f5f7; margin: 0; color: #333; }
+.container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 40px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+.profile-header { background: #000; position: relative; }
+.profile-banner { height: 160px; background: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600') center/cover; position: relative; }
+
+/* Выпадающий язык */
+.lang-dropdown { position: absolute; top: 10px; right: 10px; background: #fff; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 12px; font-weight: bold; }
+.lang-content { display: none; position: absolute; right: 0; background: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 5px; margin-top: 5px; overflow: hidden; }
+.lang-content a { display: block; padding: 8px 12px; text-decoration: none; color: #333; font-size: 12px; }
+.lang-content a:hover { background: #f0f0f0; }
+.lang-dropdown:hover .lang-content { display: block; }
+
+.profile-info { display: flex; align-items: center; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: #fff; margin-top: -50px; position: relative; }
+.avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: 15px; }
+.profile-text h1 { font-size: 16px; margin: 0 0 4px 0; }
+.profile-text p { font-size: 11px; margin: 0; opacity: 0.9; }
+.address { color: #ffcccc; margin-top: 3px !important; }
+
+/* Наше кастомное меню */
+.custom-menu { display: flex; background: #fff; border-bottom: 1px solid #eee; }
+.menu-item { flex: 1; background: none; border: none; padding: 12px 5px; font-size: 12px; font-weight: 600; cursor: pointer; color: #666; text-align: center; }
+.menu-item.active { color: #00bfa5; border-bottom: 2px solid #00bfa5; }
+
+.booking-section { text-align: center; padding: 25px 20px; }
+.btn-primary, .btn-submit { background-color: #00bfa5; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
+.contacts-section, .section-block { padding: 20px; }
+.contact-card { display: flex; align-items: center; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-decoration: none; color: #333; font-weight: 500; }
+.portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.portfolio-grid img { width: 100%; height: 95px; object-fit: cover; border-radius: 6px; }
 
 /* Модальное окно */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-}
-.modal-content {
-    background-color: #f9f9f9;
-    margin: 5% auto;
-    width: 90%;
-    max-width: 450px;
-    border-radius: 12px;
-    overflow: hidden;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-}
-.modal-header {
-    background: #00bfa5;
-    color: white;
-    padding: 15px;
-    text-align: center;
-    position: relative;
-}
-.modal-header h2 {
-    margin: 0;
-    font-size: 18px;
-}
-.modal-header p {
-    margin: 5px 0 0 0;
-    font-size: 13px;
-    opacity: 0.9;
-}
-.close-btn {
-    position: absolute;
-    right: 15px;
-    top: 10px;
-    font-size: 24px;
-    cursor: pointer;
-}
-.services-form {
-    padding: 15px;
-    overflow-y: auto;
-}
-.service-category {
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    overflow: hidden;
-}
-.category-title {
-    background: #00bfa5;
-    color: white;
-    padding: 10px 15px;
-    font-size: 13px;
-    font-weight: bold;
-}
-.service-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    border-bottom: 1px solid #f1f1f1;
-    cursor: pointer;
-}
-.service-item:last-child {
-    border-bottom: none;
-}
-.service-info {
-    display: flex;
-    flex-direction: column;
-    padding-right: 10px;
-}
-.s-name {
-    font-size: 13px;
-    color: #333;
-    margin-bottom: 4px;
-}
-.s-price {
-    font-size: 11px;
-    color: #777;
-}
-.client-details {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-}
-.client-details h3 {
-    font-size: 14px;
-    margin-top: 0;
-}
-.input-field {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box;
-}
-.btn-submit {
-    background: #00bfa5;
-    color: white;
-    border: none;
-    width: 100%;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-}
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+.modal-content { background: #fff; margin: 15% auto; width: 85%; max-width: 400px; padding: 20px; border-radius: 10px; position: relative; }
+.close-btn { position: absolute; right: 15px; top: 10px; font-size: 22px; cursor: pointer; }
+.service-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+.input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+.admin-body { display: flex; justify-content: center; align-items: center; height: 100vh; }
+.admin-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
