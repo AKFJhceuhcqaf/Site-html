@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="admin-body">
-    <div class="admin-container">
+    <div class="admin-container" style="max-width: 400px;">
         {% if needs_login %}
             <h2 style="margin-top:0;">Вход в админку</h2>
             {% if error %}<p style="color:red; font-size: 13px;">{{ error }}</p>{% endif %}
             <form method="POST">
-                <input type="password" name="password" placeholder="Пароль (admin123)" required class="input-field">
+                <input type="password" name="password" placeholder="Введите пароль" required class="input-field">
                 <button type="submit" class="btn-primary">Войти</button>
             </form>
         {% else %}
@@ -28,8 +28,20 @@
                 
                 <button type="submit" class="btn-submit">Сохранить изменения</button>
             </form>
-            <br>
-            <a href="/" style="color: #d4af37; text-decoration: none; font-size: 13px; font-weight: bold;">← Вернуться на сайт</a>
+
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+
+            <h3>Смена пароля админки</h3>
+            <form action="/change-password" method="POST">
+                <label style="font-size:12px; font-weight:bold;">Новый пароль (минимум 6 символов):</label>
+                <input type="password" name="new_password" placeholder="Введите новый пароль" required class="input-field" minlength="6">
+                <button type="submit" class="btn-primary" style="background: #333;">Изменить пароль</button>
+            </form>
+
+            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <a href="/" style="color: #d4af37; text-decoration: none; font-size: 13px; font-weight: bold;">← На сайт</a>
+                <a href="/logout" style="color: #e74c3c; text-decoration: none; font-size: 13px; font-weight: bold;">Выйти</a>
+            </div>
         {% endif %}
     </div>
 </body>
