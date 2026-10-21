@@ -1,7 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from supabase import create_client, Client
-from werkzeug.utils import secure_filename
 import html
 
 app = Flask(__name__)
@@ -13,8 +12,7 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route('/')
-d
-ef index():
+def index():
     lang = request.args.get('lang', 'ru')
     
     # Получаем актуальные данные профиля из базы данных Supabase
@@ -31,10 +29,9 @@ ef index():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    # Простейшая защита админки сессией
     if request.method == 'POST':
         password = request.form.get('password')
-        if password == "admin123": # Измените пароль при необходимости
+        if password == "admin123":
             session['logged_in'] = True
             return redirect(url_for('admin'))
         else:
@@ -43,7 +40,6 @@ def admin():
     if not session.get('logged_in'):
         return render_template('admin.html', needs_login=True)
         
-    # Получаем текущие данные для формы редактирования
     response = supabase.table("settings").select("*").execute()
     data = response.data[0] if response.data else {}
     return render_template('admin.html', logged_in=True, data=data)
@@ -53,12 +49,10 @@ def update_settings():
     if not session.get('logged_in'):
         return redirect(url_for('admin'))
         
-    # Защита от XSS (экранирование)
     new_name = html.escape(request.form.get('name', ''))
     new_phone = html.escape(request.form.get('phone', ''))
     new_avatar = html.escape(request.form.get('avatar_url', ''))
     
-    # Безопасное обновление через ORM Supabase (защита от SQL-инъекций)
     supabase.table("settings").update({
         "name": new_name,
         "phone": new_phone,
@@ -73,7 +67,6 @@ def book():
     client_phone = html.escape(request.form.get('client_phone', ''))
     service = html.escape(request.form.get('service', ''))
     
-    # Безопасная вставка заявки в БД
     supabase.table("bookings").insert({
         "client_name": client_name,
         "client_phone": client_phone,
