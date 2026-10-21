@@ -1,213 +1,117 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рогожина Екатерина — Студия красоты "Сияй"</title>
+    <title>{{ data.name }} — Студия красоты</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <!-- Шапка профиля -->
+        <!-- Шапка с переключателем языка -->
         <div class="profile-header">
             <div class="profile-banner">
-                <div class="lang-switch">🇷🇺 Рус ▾</div>
+                <div class="lang-dropdown">
+                    <span class="lang-btn">🇷🇺 {{ lang | upper }} ▾</span>
+                    <div class="lang-content">
+                        <a href="/?lang=ru">🇷🇺 Русский</a>
+                        <a href="/?lang=en">🇬🇧 English</a>
+                    </div>
+                </div>
             </div>
             <div class="profile-info">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Екатерина" class="avatar">
+                <img src="{{ data.avatar_url }}" alt="Мастер" class="avatar">
                 <div class="profile-text">
-                    <h1>Рогожина Екатерина</h1>
-                    <p>Перманентный макияж, Brow мастер, Наращивание ресниц</p>
+                    <h1>{{ data.name }}</h1>
+                    <p>{% if lang == 'en' %}{{ data.bio_en }}{% else %}{{ data.bio_ru }}{% endif %}</p>
                     <p class="address">Оренбург, Ул. Планерная д. 4 кв 3</p>
                 </div>
             </div>
-            <!-- Кликабельные вкладки навигации -->
-            <div class="profile-nav">
-                <button class="nav-btn active" onclick="switchTab('booking', this)">📅</button>
-                <button class="nav-btn" onclick="switchTab('portfolio', this)">🖼️ 24</button>
-                <button class="nav-btn" onclick="switchTab('reviews', this)">👍 9</button>
-                <button class="nav-btn" onclick="switchTab('info', this)">ℹ️</button>
+            
+            <!-- Наше собственное меню навигации -->
+            <div class="custom-menu">
+                <button class="menu-item active" onclick="showSection('main-section', this)">🏠 {% if lang == 'en' %}Home{% else %}Главная{% endif %}</button>
+                <button class="menu-item" onclick="showSection('portfolio-section', this)">🖼️ {% if lang == 'en' %}Portfolio{% else %}Портфолио{% endif %}</button>
+                <button class="menu-item" onclick="showSection('map-section', this)">📍 {% if lang == 'en' %}Map & Contacts{% else %}Карта{% endif %}</button>
             </div>
         </div>
 
-        <!-- Вкладка 1: Главная / Запись -->
-        <div id="tab-booking" class="tab-content active">
+        <!-- Раздел 1: Главная / Запись -->
+        <div id="main-section" class="content-section active-section">
             <div class="booking-section">
-                <p>Добро пожаловать на мою страницу, запишитесь онлайн:</p>
-                <button class="btn-primary" onclick="openBookingModal()">Записаться онлайн</button>
+                <p>{% if lang == 'en' %}Welcome! Book online easily:{% else %}Добро пожаловать! Выберите услугу и запишитесь онлайн:{% endif %}</p>
+                <button class="btn-primary" onclick="openBookingModal()">{% if lang == 'en' %}Book Online{% else %}Записаться онлайн{% endif %}</button>
             </div>
+            
             <div class="contacts-section">
-                <p>Связаться со мной:</p>
-                <a href="tel:+79510354835" class="contact-card">
-                    <span class="icon phone">📞</span>
-                    <span>Позвонить</span>
+                <p>{% if lang == 'en' %}Contact me:{% else %}Связаться со мной:{% endif %}</p>
+                <a href="tel:{{ data.phone }}" class="contact-card">
+                    <span>📞</span> <span>{{ data.phone }}</span>
                 </a>
-                <a href="https://wa.me/79510354835" class="contact-card">
-                    <span class="icon whatsapp">💬</span>
-                    <span>WhatsApp</span>
-                </a>
-                <a href="#" class="contact-card">
-                    <span class="icon max">💬</span>
-                    <span>MAX</span>
+                <a href="https://wa.me/{{ data.phone | replace('+', '') }}" class="contact-card">
+                    <span>💬</span> <span>WhatsApp</span>
                 </a>
             </div>
         </div>
 
-        <!-- Вкладка 2: Портфолио -->
-        <div id="tab-portfolio" class="tab-content" style="display: none;">
+        <!-- Раздел 2: Портфолио -->
+        <div id="portfolio-section" class="content-section" style="display:none;">
             <div class="section-block">
-                <h3>Портфолио:</h3>
+                <h3>{% if lang == 'en' %}My Works{% else %}Мои работы{% endif %}</h3>
                 <div class="portfolio-grid">
-                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300" alt="Работа">
-                    <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300" alt="Работа">
-                    <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300" alt="Работа">
+                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300" alt="Work">
+                    <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300" alt="Work">
+                    <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300" alt="Work">
                 </div>
             </div>
         </div>
 
-        <!-- Вкладка 3: Отзывы -->
-        <div id="tab-reviews" class="tab-content" style="display: none;">
+        <!-- Раздел 3: Карта и Адрес -->
+        <div id="map-section" class="content-section" style="display:none;">
             <div class="section-block">
-                <h3>Отзывы:</h3>
-                <div class="review-card">
-                    <strong>Ксения</strong> <span class="review-date">04.06.2026</span>
-                    <p>Большое спасибо, всё прекрасно! Реснички очень понравились. Рекомендую ⭐⭐⭐⭐⭐</p>
-                </div>
-                <div class="review-card">
-                    <strong>Романова Юлия</strong> <span class="review-date">20.01.2026</span>
-                    <p>Катя самый замечательный мастер, просто ресничная фея! Хожу к ней 6 лет ❤️</p>
+                <h3>{% if lang == 'en' %}Location{% else %}Как нас найти{% endif %}</h3>
+                <p><strong>{% if lang == 'en' %}Address{% else %}Адрес{% endif %}:</strong> Оренбург, Ул. Планерная д. 4 кв 3</p>
+                
+                <!-- Встроенная Яндекс Карта (интегрированная) -->
+                <div class="map-container" style="margin-top: 15px; border-radius: 8px; overflow: hidden;">
+                    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A366055c9dcf986504a55855f46cf0fa389028cd97e034e320573e8dbdd7f16ef&amp;source=constructor" width="100%" height="300" frameborder="0"></iframe>
                 </div>
             </div>
-        </div>
-
-        <!-- Вкладка 4: Информация -->
-        <div id="tab-info" class="tab-content" style="display: none;">
-            <div class="section-block info-padding">
-                <h3>Информация:</h3>
-                <p><strong>Адрес:</strong> Оренбург, Ул. Планерная д. 4 кв 3</p>
-                <p><strong>График работы:</strong> Пн-Сб с 09:00 до 20:00</p>
-                <p><strong>Телефон:</strong> +7 (951) 035-48-35</p>
-            </div>
-        </div>
-
-        <!-- Подвал (лишняя реклама удалена) -->
-        <div class="footer">
-            <p>© Студия красоты "Сияй"</p>
         </div>
     </div>
 
-    <!-- Модальное окно выбора услуг -->
+    <!-- Модальное окно записи -->
     <div id="bookingModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <span class="close-btn" onclick="closeBookingModal()">&times;</span>
-                <h2>Выбор услуг</h2>
-                <p>Рогожина Екатерина</p>
-            </div>
-            
+            <span class="close-btn" onclick="closeBookingModal()">&times;</span>
+            <h2>{% if lang == 'en' %}Online Booking{% else %}Онлайн-запись{% endif %}</h2>
             <form action="/book" method="POST" class="services-form">
-                <!-- Наращивание ресниц -->
-                <div class="service-category">
-                    <div class="category-title">НАРАЩИВАНИЕ РЕСНИЦ</div>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">ЛЭД наращивание - объём 4-5 D - изгиб L, M</span>
-                            <span class="s-price">от 2 000 ₽, 2 час. 30 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="ЛЭД наращивание 4-5D (2000₽)" required>
-                    </label>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">ЛЭД наращивание , объём 2,3 D</span>
-                            <span class="s-price">от 1 900 ₽, 2 час. 30 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="ЛЭД наращивание 2,3D (1900₽)">
-                    </label>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">Наращивание ресниц 2-3D</span>
-                            <span class="s-price">от 1 700 ₽, 2 час. 30 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="Наращивание ресниц 2-3D (1700₽)">
-                    </label>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">Наращивание ресниц 4D</span>
-                            <span class="s-price">от 1 800 ₽, 2 час. 30 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="Наращивание ресниц 4D (1800₽)">
-                    </label>
-                </div>
-
-                <!-- Оформление бровей -->
-                <div class="service-category">
-                    <div class="category-title">ОФОРМЛЕНИЕ БРОВЕЙ</div>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">Архитектура бровей и окрашивание краской</span>
-                            <span class="s-price">от 600 ₽, 30 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="Архитектура и краска (600₽)">
-                    </label>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">Долговременная укладка бровей</span>
-                            <span class="s-price">от 1 000 ₽, 50 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="Долговременная укладка (1000₽)">
-                    </label>
-                </div>
-
-                <!-- Перманентный макияж -->
-                <div class="service-category">
-                    <div class="category-title">ПЕРМАНЕНТНЫЙ МАКИЯЖ</div>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">Перманентный макияж бровей</span>
-                            <span class="s-price">от 3 000 ₽, 2 час. 30 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="Перманент бровей (3000₽)">
-                    </label>
-                    <label class="service-item">
-                        <div class="service-info">
-                            <span class="s-name">Перманентный макияж губ</span>
-                            <span class="s-price">от 3 000 ₽, 2 час. 30 мин.</span>
-                        </div>
-                        <input type="radio" name="service" value="Перманент губ (3000₽)">
-                    </label>
-                </div>
-
-                <div class="client-details">
-                    <h3>Ваши данные для записи:</h3>
+                <label class="service-item">
+                    <span>ЛЭД наращивание ресниц (2000 ₽)</span>
+                    <input type="radio" name="service" value="ЛЭД наращивание (2000₽)" required>
+                </label>
+                <label class="service-item">
+                    <span>Архитектура бровей (600 ₽)</span>
+                    <input type="radio" name="service" value="Архитектура бровей (600₽)">
+                </label>
+                <div class="client-details" style="margin-top: 15px;">
                     <input type="text" name="client_name" placeholder="Ваше имя" required class="input-field">
-                    <input type="tel" name="client_phone" placeholder="Номер телефона" required class="input-field">
-                    <button type="submit" class="btn-submit">Подтвердить запись</button>
+                    <input type="tel" name="client_phone" placeholder="Телефон" required class="input-field">
+                    <button type="submit" class="btn-submit">{% if lang == 'en' %}Confirm{% else %}Подтвердить{% endif %}</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-            document.getElementById('tab-' + tabId).style.display = 'block';
-
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        function showSection(sectionId, btn) {
+            document.querySelectorAll('.content-section').forEach(el => el.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+            document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
-
-        function openBookingModal() {
-            document.getElementById('bookingModal').style.display = 'block';
-        }
-        function closeBookingModal() {
-            document.getElementById('bookingModal').style.display = 'none';
-        }
-        window.onclick = function(event) {
-            let modal = document.getElementById('bookingModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+        function openBookingModal() { document.getElementById('bookingModal').style.display = 'block'; }
+        function closeBookingModal() { document.getElementById('bookingModal').style.display = 'none'; }
     </script>
 </body>
 </html>
