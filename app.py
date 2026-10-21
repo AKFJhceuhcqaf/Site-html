@@ -1,90 +1,86 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from supabase import create_client, Client
-from dotenv import load_dotenv
-
-load_dotenv()
+from werkzeug.utils import secure_filename
+import html
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "super-secret-key-change-it")
 
+# Подключение к Supabase
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-
-supabase: Client = None
-if SUPABASE_URL and SUPABASE_KEY:
-    try:
-        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-    except Exception as e:
-        print(f"Ошибка инициализации Supabase: {e}")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route('/')
-def index():
-    success = request.args.get('success')
-    reviews = []
+d
+ef index():
+    lang = request.args.get('lang', 'ru')
     
-    if supabase:
-        try:
-            response = supabase.table('reviews').select("*").order('created_at', desc=True).execute()
-            reviews = response.data
-        except Exception as e:
-            print(f"Ошибка при получении отзывов: {e}")
+    # Получаем актуальные данные профиля из базы данных Supabase
+    response = supabase.table("settings").select("*").execute()
+    data = response.data[0] if response.data else {
+        "name": "Рогожина Екатерина",
+        "phone": "+79510354835",
+        "avatar_url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+        "bio_ru": "Перманентный макияж, Brow мастер, Наращивание ресниц",
+        "bio_en": "Permanent makeup, Brow master, Eyelash extensions"
+    }
+    
+    return render_template('index.html', data=data, lang=lang)
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    # Простейшая защита админки сессией
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == "admin123": # Измените пароль при необходимости
+            session['logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            return render_template('admin.html', error="Неверный пароль")
             
-    return render_template('index.html', reviews=reviews, success=success)
+    if not session.get('logged_in'):
+        return render_template('admin.html', needs_login=True)
+        
+    # Получаем текущие данные для формы редактирования
+    response = supabase.table("settings").select("*").execute()
+    data = response.data[0] if response.data else {}
+    return render_template('admin.html', logged_in=True, data=data)
+
+@app.route('/update-settings', methods=['POST'])
+def update_settings():
+    if not session.get('logged_in'):
+        return redirect(url_for('admin'))
+        
+    # Защита от XSS (экранирование)
+    new_name = html.escape(request.form.get('name', ''))
+    new_phone = html.escape(request.form.get('phone', ''))
+    new_avatar = html.escape(request.form.get('avatar_url', ''))
+    
+    # Безопасное обновление через ORM Supabase (защита от SQL-инъекций)
+    supabase.table("settings").update({
+        "name": new_name,
+        "phone": new_phone,
+        "avatar_url": new_avatar
+    }).eq("id", 1).execute()
+    
+    return redirect(url_for('admin'))
 
 @app.route('/book', methods=['POST'])
 def book():
-    name = request.form.get('name')
-    phone = request.form.get('phone')
-    service = request.form.get('service')
-    date = request.form.get('date')
-
-    if supabase and name and phone and service and date:
-        try:
-            supabase.table('bookings').insert({
-                "name": name,
-                "phone": phone,
-                "service": service,
-                "date": date
-            }).execute()
-        except Exception as e:
-            print(f"Ошибка при создании записи: {e}")
-
-    return redirect(url_for('index', success=1))
-
-@app.route('/add_review', methods=['POST'])
-def add_review():
-    author = request.form.get('author')
-    text = request.form.get('text')
-    date = request.form.get('date')
-
-    if supabase and author and text and date:
-        try:
-            supabase.table('reviews').insert({
-                "author": author,
-                "text": text,
-                "date": date
-            }).execute()
-        except Exception as e:
-            print(f"Ошибка при добавлении отзыва: {e}")
-
+    client_name = html.escape(request.form.get('client_name', ''))
+    client_phone = html.escape(request.form.get('client_phone', ''))
+    service = html.escape(request.form.get('service', ''))
+    
+    # Безопасная вставка заявки в БД
+    supabase.table("bookings").insert({
+        "client_name": client_name,
+        "client_phone": client_phone,
+        "service": service
+    }).execute()
+    
     return redirect(url_for('index'))
 
-@app.route('/admin')
-def admin():
-    bookings = []
-    if supabase:
-        try:
-            response = supabase.table('bookings').select("*").order('created_at', desc=True).execute()
-            bookings = response.data
-        except Exception as e:
-            print(f"Ошибка при получении записей для админки: {e}")
-            
-    return render_template('admin.html', bookings=bookings)
-
-@app.route('/health')
-def health():
-    return "OK", 200
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=5000)
