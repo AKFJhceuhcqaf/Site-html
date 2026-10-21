@@ -28,7 +28,7 @@
                 </div>
             </div>
             
-            <!-- Наше собственное меню навигации -->
+            <!-- Интерактивное меню навигации -->
             <div class="custom-menu">
                 <button class="menu-item active" onclick="showSection('main-section', this)">🏠 {% if lang == 'en' %}Home{% else %}Главная{% endif %}</button>
                 <button class="menu-item" onclick="showSection('portfolio-section', this)">🖼️ {% if lang == 'en' %}Portfolio{% else %}Портфолио{% endif %}</button>
@@ -72,7 +72,7 @@
                 <h3>{% if lang == 'en' %}Location{% else %}Как нас найти{% endif %}</h3>
                 <p><strong>{% if lang == 'en' %}Address{% else %}Адрес{% endif %}:</strong> Оренбург, Ул. Планерная д. 4 кв 3</p>
                 
-                <!-- Встроенная Яндекс Карта (интегрированная) -->
+                <!-- Встроенная Яндекс Карта -->
                 <div class="map-container" style="margin-top: 15px; border-radius: 8px; overflow: hidden;">
                     <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A366055c9dcf986504a55855f46cf0fa389028cd97e034e320573e8dbdd7f16ef&amp;source=constructor" width="100%" height="300" frameborder="0"></iframe>
                 </div>
