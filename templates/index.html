@@ -72,8 +72,8 @@
                 <h3>{% if lang == 'en' %}Location{% else %}Как нас найти{% endif %}</h3>
                 <p><strong>{% if lang == 'en' %}Address{% else %}Адрес{% endif %}:</strong> Оренбург, Ул. Планерная д. 4 кв 3</p>
                 
-                <!-- Встроенная Яндекс Карта -->
-                <div class="map-container" style="margin-top: 15px; border-radius: 8px; overflow: hidden;">
+                <!-- Точная Яндекс Карта -->
+                <div class="map-container" style="margin-top: 15px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
                     <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A366055c9dcf986504a55855f46cf0fa389028cd97e034e320573e8dbdd7f16ef&amp;source=constructor" width="100%" height="300" frameborder="0"></iframe>
                 </div>
             </div>
@@ -84,7 +84,7 @@
     <div id="bookingModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeBookingModal()">&times;</span>
-            <h2>{% if lang == 'en' %}Online Booking{% else %}Онлайн-запись{% endif %}</h2>
+            <h2 style="margin-top:0; font-size: 18px; color: #2c2c2c;">{% if lang == 'en' %}Online Booking{% else %}Онлайн-запись{% endif %}</h2>
             <form action="/book" method="POST" class="services-form">
                 <label class="service-item">
                     <span>ЛЭД наращивание ресниц (2000 ₽)</span>
