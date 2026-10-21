@@ -1,13 +1,12 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
-from supabase import create_client, Client
 import html
+from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
+from supabase import create_client, Client
 
 app = Flask(__name__)
-# Защищенный секретный ключ сессии администратора
-app.secret_key = os.environ.get("SECRET_KEY", "super-secret-key-change-it")
+app.secret_key = os.environ.get("SECRET_KEY", "super-secure-random-key-change-it-12345")
 
-# Подключение к Supabase через переменные окружения
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
@@ -19,7 +18,6 @@ except Exception:
 @app.route('/')
 def index():
     lang = request.args.get('lang', 'ru')
-    
     data = {
         "name": "Рогожина Екатерина",
         "phone": "+79510354835",
@@ -27,7 +25,6 @@ def index():
         "bio_ru": "Перманентный макияж, Brow мастер, Наращивание ресниц",
         "bio_en": "Permanent makeup, Brow master, Eyelash extensions"
     }
-    
     if supabase:
         try:
             response = supabase.table("settings").select("*").execute()
@@ -35,20 +32,33 @@ def index():
                 data.update(response.data[0])
         except Exception:
             pass
-    
     return render_template('index.html', data=data, lang=lang)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        password = request.form.get('password')
-        if password == "admin123": # Измените пароль при необходимости
-            session['logged_in'] = True
+        entered_password = request.form.get('password', '')
+        
+        # Получаем данные настроек из базы (включая хэш пароля)
+        db_data = {}
+        if supabase:
+            try:
+                res = supabase.table("settings").select("*").execute()
+                if res.data:
+                    db_data = res.data[0]
+            except Exception:
+                pass
+        
+        # Дефолтный хэш (если в базе еще нет своего, по умолчанию "admin123")
+        stored_hash = db_data.get('admin_password_hash') or generate_password_hash("admin123")
+        
+        if check_password_hash(stored_hash, entered_password):
+            session['is_authenticated'] = True
             return redirect(url_for('admin'))
         else:
-            return render_template('admin.html', error="Неверный пароль")
+            return render_template('admin.html', needs_login=True, error="Неверный пароль")
             
-    if not session.get('logged_in'):
+    if not session.get('is_authenticated'):
         return render_template('admin.html', needs_login=True)
         
     data = {}
@@ -64,17 +74,15 @@ def admin():
 
 @app.route('/update-settings', methods=['POST'])
 def update_settings():
-    if not session.get('logged_in'):
+    if not session.get('is_authenticated'):
         return redirect(url_for('admin'))
         
-    # Защита от XSS (экранирование пользовательского ввода)
     new_name = html.escape(request.form.get('name', ''))
     new_phone = html.escape(request.form.get('phone', ''))
     new_avatar = html.escape(request.form.get('avatar_url', ''))
     
     if supabase:
         try:
-            # Безопасное обновление через ORM (защита от SQL-инъекций)
             supabase.table("settings").update({
                 "name": new_name,
                 "phone": new_phone,
@@ -85,13 +93,34 @@ def update_settings():
     
     return redirect(url_for('admin'))
 
+@app.route('/change-password', methods=['POST'])
+def change_password():
+    if not session.get('is_authenticated'):
+        return redirect(url_for('admin'))
+        
+    new_pass = request.form.get('new_password', '')
+    if len(new_pass) >= 6:
+        new_hash = generate_password_hash(new_pass)
+        if supabase:
+            try:
+                supabase.table("settings").update({
+                    "admin_password_hash": new_hash
+                }).eq("id", 1).execute()
+            except Exception:
+                pass
+                
+    return redirect(url_for('admin'))
+
+@app.route('/logout')
+def logout():
+    session.pop('is_authenticated', None)
+    return redirect(url_for('index'))
+
 @app.route('/book', methods=['POST'])
 def book():
-    # Экранирование данных онлайн-записи
     client_name = html.escape(request.form.get('client_name', ''))
     client_phone = html.escape(request.form.get('client_phone', ''))
     service = html.escape(request.form.get('service', ''))
-    
     if supabase:
         try:
             supabase.table("bookings").insert({
@@ -101,7 +130,6 @@ def book():
             }).execute()
         except Exception:
             pass
-    
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
