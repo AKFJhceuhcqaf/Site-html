@@ -3,97 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Онлайн-запись к мастеру красоты</title>
+    <title>Рогожина Екатерина — Студия красоты "Сияй"</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <h1>Мастер красоты</h1>
-            <p>Профессиональный уход и безупречный результат</p>
-        </div>
-    </header>
-
-    <main class="container">
-        {% if success == '1' %}
-            <div class="alert success">
-                Запись успешно оформлена! Ждем вас в назначенное время.
+    <div class="container">
+        <!-- Шапка профиля -->
+        <div class="profile-header">
+            <div class="profile-banner">
+                <div class="lang-switch">🇷🇺 Рус ▾</div>
             </div>
-        {% endif %}
+            <div class="profile-info">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Екатерина" class="avatar">
+                <div class="profile-text">
+                    <h1>Рогожина Екатерина</h1>
+                    <p>Перманентный макияж, Brow мастер, Наращивание ресниц</p>
+                    <p class="address">Оренбург, Ул. Планерная д. 4 кв 3</p>
+                </div>
+            </div>
+            <div class="profile-nav">
+                <button class="nav-btn active">📅</button>
+                <button class="nav-btn">🖼️ 24</button>
+                <button class="nav-btn">👍 9</button>
+                <button class="nav-btn">ℹ️</button>
+            </div>
+        </div>
 
-        <!-- Форма онлайн-записи -->
-        <section class="section">
-            <h2>Онлайн-запись</h2>
-            <form action="/book" method="POST" class="form">
-                <div class="form-group">
-                    <label for="name">Ваше имя:</label>
-                    <input type="text" id="name" name="name" required placeholder="Анна">
-                </div>
-                <div class="form-group">
-                    <label for="phone">Телефон:</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="+7 (999) 000-00-00">
-                </div>
-                <div class="form-group">
-                    <label for="service">Услуга:</label>
-                    <select id="service" name="service" required>
-                        <option value="">Выберите услугу</option>
-                        <option value="Маникюр">Маникюр</option>
-                        <option value="Педикюр">Педикюр</option>
-                        <option value="Макияж">Макияж</option>
-                        <option value="Оформление бровей">Оформление бровей</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="date">Дата и время:</label>
-                    <input type="datetime-local" id="date" name="date" required>
-                </div>
-                <button type="submit" class="btn">Записаться</button>
-            </form>
-        </section>
+        <!-- Кнопка онлайн-записи -->
+        <div class="booking-section">
+            <p>Добро пожаловать на мою страницу, запишитесь онлайн:</p>
+            <button class="btn-primary" onclick="openBookingModal()">Записаться онлайн</button>
+        </div>
 
-        <!-- Секция отзывов -->
-        <section class="section">
-            <h2>Отзывы клиентов</h2>
+        <!-- Блок контактов и мессенджеров -->
+        <div class="contacts-section">
+            <p>Связаться со мной:</p>
+            <a href="tel:+79510354835" class="contact-card">
+                <span class="icon phone">📞</span>
+                <span>Позвонить</span>
+            </a>
+            <a href="https://wa.me/79510354835" class="contact-card">
+                <span class="icon whatsapp">💬</span>
+                <span>WhatsApp</span>
+            </a>
+            <a href="#" class="contact-card">
+                <span class="icon max">💬</span>
+                <span>MAX</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Сделано на <strong>masters</strong></p>
+            <a href="#">Откройте свою онлайн-запись!</a>
+        </div>
+    </div>
+
+    <!-- Модальное окно выбора услуг (как на ваших скриншотах) -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-btn" onclick="closeBookingModal()">&times;</span>
+                <h2>Выбор услуг</h2>
+                <p>Рогожина Екатерина</p>
+            </div>
             
-            <div class="reviews-list">
-                {% if reviews %}
-                    {% for review in reviews %}
-                        <div class="review-card">
-                            <div class="review-header">
-                                <strong>{{ review.author }}</strong>
-                                <span class="review-date">{{ review.date }}</span>
-                            </div>
-                            <p class="review-text">{{ review.text }}</p>
+            <form action="/book" method="POST" class="services-form">
+                <!-- Категория 1: Наращивание ресниц -->
+                <div class="service-category">
+                    <div class="category-title">НАРАЩИВАНИЕ РЕСНИЦ</div>
+                    
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">ЛЭД наращивание - объём 4-5 D - изгиб L, M - коричневые ресницы</span>
+                            <span class="s-price">от 2 000 ₽, 2 час. 30 мин.</span>
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="no-reviews">Пока нет отзывов. Станьте первым!</p>
-                {% endif %}
-            </div>
+                        <input type="radio" name="service" value="ЛЭД наращивание 4-5D (2000₽)" required>
+                    </label>
 
-            <h3>Оставить отзыв</h3>
-            <form action="/add_review" method="POST" class="form">
-                <div class="form-group">
-                    <label for="author">Ваше имя:</label>
-                    <input type="text" id="author" name="author" required placeholder="Елена">
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">ЛЭД наращивание , объём 2,3 D</span>
+                            <span class="s-price">от 1 900 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="ЛЭД наращивание 2,3D (1900₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Наращивание ресниц 2-3D</span>
+                            <span class="s-price">от 1 700 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Наращивание ресниц 2-3D (1700₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Наращивание ресниц 4D</span>
+                            <span class="s-price">от 1 800 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Наращивание ресниц 4D (1800₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Наращивание ресниц изгиб L, M</span>
+                            <span class="s-price">от 1 800 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Наращивание ресниц L, M (1800₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Наращивание ресниц "МОКРЫЙ ЭФФЕКТ"</span>
+                            <span class="s-price">от 1 800 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Мокрый эффект (1800₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Наращивание ресниц (коричневый цвет)</span>
+                            <span class="s-price">от 1 800 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Коричневые ресницы (1800₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Снятие ресниц (чужая работа)</span>
+                            <span class="s-price">от 300 ₽, 10 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Снятие ресниц (300₽)">
+                    </label>
                 </div>
-                <div class="form-group">
-                    <label for="text">Текст отзыва:</label>
-                    <textarea id="text" name="text" rows="4" required placeholder="Все очень понравилось!"></textarea>
+
+                <!-- Категория 2: Оформление бровей -->
+                <div class="service-category">
+                    <div class="category-title">ОФОРМЛЕНИЕ БРОВЕЙ</div>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Архитектура бровей и окрашивание краской</span>
+                            <span class="s-price">от 600 ₽, 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Архитектура и краска (600₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Архитектура бровей и окрашивание хной</span>
+                            <span class="s-price">от 700 ₽, 40 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Архитектура и хна (700₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Долговременная укладка бровей</span>
+                            <span class="s-price">от 1 000 ₽, 50 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Долговременная укладка бровей (1000₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Коррекция формы бровей</span>
+                            <span class="s-price">от 400 ₽, 20 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Коррекция бровей (400₽)">
+                    </label>
                 </div>
-                <div class="form-group">
-                    <label for="review_date">Дата визита:</label>
-                    <input type="date" id="review_date" name="date" required>
+
+                <!-- Категория 3: Перманентный макияж -->
+                <div class="service-category">
+                    <div class="category-title">ПЕРМАНЕНТНЫЙ МАКИЯЖ</div>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Перманентный макияж бровей</span>
+                            <span class="s-price">от 3 000 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Перманент бровей (3000₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Перманентный макияж губ</span>
+                            <span class="s-price">от 3 000 ₽, 2 час. 30 мин.</span>
+                        </div>
+                        <input type="radio" name="service" value="Перманент губ (3000₽)">
+                    </label>
+
+                    <label class="service-item">
+                        <div class="service-info">
+                            <span class="s-name">Межресничный перманентный макияж</span>
+                            <span class="s-price">от 2 000 ₽, 2 час.</span>
+                        </div>
+                        <input type="radio" name="service" value="Межресничный перманент (2000₽)">
+                    </label>
                 </div>
-                <button type="submit" class="btn">Отправить отзыв</button>
+
+                <!-- Контакты клиента для записи -->
+                <div class="client-details">
+                    <h3>Ваши данные для записи:</h3>
+                    <input type="text" name="client_name" placeholder="Ваше имя" required class="input-field">
+                    <input type="tel" name="client_phone" placeholder="Номер телефона" required class="input-field">
+                    <button type="submit" class="btn-submit">Подтвердить запись</button>
+                </div>
             </form>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Мастер красоты. Все права защищены.</p>
         </div>
-    </footer>
+    </div>
+
+    <script>
+        function openBookingModal() {
+            document.getElementById('bookingModal').style.display = 'block';
+        }
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            let modal = document.getElementById('bookingModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
